@@ -9,17 +9,18 @@ namespace Project1.Data
     internal enum EventEnum
     {
         None,
-        Turret,
-        Landmine,
-        Hoarding,
-        Lasso,
-        Unfair,
-        OopsAllSnareFlea,
-        BrackenAndCoil,
-        Chaos,
-        GoToRend,
+        ResetHeat,
+        Turret, //Turret Hell
+        Landmine, //Landmine Hell
+        Hoarding, //Loot Bug Only
+        Lasso, 
+        Unfair, //More Enemy ?
+        OopsAllSnareFlea, //Snare Flea Only
+        BrackenAndCoil, //Bracken Coil Only
+        Chaos, //Eclipsed ?
         All,
-        Delivery,
-        ReplaceItems
+        Delivery, //Random Item Delivery
+        ReplaceItems, //Replace bought item with WalkieTalkie
+        Schizophrenia //Little Girl Only
     }
 }

@@ -112,11 +112,14 @@ namespace BrutalCompany
             }
             int chanceForTurretHell = Random.Range(-5, 3);
             int chanceforLandmineHell = Random.Range(-5, 3);
-            EventEnum eventRand = (EventEnum)Mathf.Clamp(Random.Range(-1, 13), 0, 99);
+            //EventEnum eventRand = (EventEnum)Mathf.Clamp(Random.Range(-1, 14), 0, 99);
+            EventEnum eventRand = (EventEnum)Mathf.Clamp(Random.Range(-1, 14), 0, 99);
             if (newLevel.sceneName == "CompanyBuilding")
             {
                 eventRand = 0;
             }
+
+            //HUDManager.Instance.AddTextToChatOnServer("<color=orange>eventRand = " + eventRand + "</color>");
             switch (eventRand)
             {
                 default:
@@ -202,6 +205,18 @@ namespace BrutalCompany
                     }
                     break;
 
+                case EventEnum.Schizophrenia:
+                    HUDManager.Instance.AddTextToChatOnServer("<color=red>Level event: SCHIZOPHRENIA</color>", -1);
+                    foreach (var item in newLevel.Enemies)
+                    {
+                        item.rarity = 0;
+                        if (item.enemyType.enemyPrefab.GetComponent<DressGirlAI>() != null)
+                        {
+                            item.rarity = 999;
+                        }
+                    }
+                    break;
+
                 case EventEnum.BrackenAndCoil:
                     HUDManager.Instance.AddTextToChatOnServer("<color=red>Level event: THE WORST COMBO OF ALL TIME</color>");
                     foreach (var item in newLevel.Enemies)
@@ -226,12 +241,29 @@ namespace BrutalCompany
                     }
                     break;
 
+                case EventEnum.ResetHeat:
+                    HUDManager.Instance.AddTextToChatOnServer("<color=green>Level event: RESET ALL MOON HEAT</color>");
+                    foreach (SelectableLevel item3 in levelHeatVal.Keys.ToList())
+                    {
+                        levelHeatVal.TryGetValue(item3, out var value2);
+                        levelHeatVal[item3] = Mathf.Clamp(value2 - 5f, 0f, 100f);
+                        if (eventRand == EventEnum.ResetHeat || eventRand == EventEnum.All)
+                        {
+                            levelHeatVal[item3] = 0f;
+                        }
+                    }
+                    break;
+
                 case EventEnum.All:
                     HUDManager.Instance.AddTextToChatOnServer("<color=red>Level event: ALL</color>");
+
+                    //Chaos
                     foreach (var item in newLevel.Enemies)
                     {
                         item.enemyType.probabilityCurve = new AnimationCurve(new Keyframe(0, 1000));
                     }
+
+                    //Increase All Enemy Rarity
                     foreach (var item in newLevel.Enemies)
                     {
                         item.rarity = 0;
@@ -243,30 +275,25 @@ namespace BrutalCompany
                         {
                             item.rarity = 999;
                         }
-                    }
-                    foreach (var item in newLevel.Enemies)
-                    {
-                        item.rarity = 0;
+                        if (item.enemyType.enemyPrefab.GetComponent<DressGirlAI>() != null)
+                        {
+                            item.rarity = 999;
+                        }
                         if (item.enemyType.enemyPrefab.GetComponent<CentipedeAI>() != null)
                         {
                             item.rarity = 999;
                         }
-                    }
-                    foreach (var item in newLevel.Enemies)
-                    {
                         if (item.enemyType.enemyPrefab.GetComponent<LassoManAI>() != null)
                         {
                             item.rarity = 999;
                         }
-                    }
-                    foreach (var item in newLevel.Enemies)
-                    {
-                        item.rarity = 0;
                         if (item.enemyType.enemyPrefab.GetComponent<HoarderBugAI>() != null)
                         {
                             item.rarity = 999;
                         }
                     }
+
+                    //Random Delivery
                     int randItemCount2 = Random.Range(2, 9);
                     for (int i = 0; i < randItemCount2; i++)
                     {
@@ -274,12 +301,25 @@ namespace BrutalCompany
                         Terminal terminal = UnityEngine.Object.FindObjectOfType<Terminal>();
                         terminal.orderedItemsFromTerminal.Add(randomItemID);
                     }
+
+                    //Replace with Walkie Talkie
                     Terminal terminal3 = UnityEngine.Object.FindObjectOfType<Terminal>();
                     int itemCount2 = terminal3.orderedItemsFromTerminal.Count;
                     terminal3.orderedItemsFromTerminal.Clear();
                     for (int i = 0; i < itemCount2; i++)
                     {
                         terminal3.orderedItemsFromTerminal.Add(0);
+                    }
+
+                    //Reset Heat
+                    foreach (SelectableLevel item3 in levelHeatVal.Keys.ToList())
+                    {
+                        levelHeatVal.TryGetValue(item3, out var value2);
+                        levelHeatVal[item3] = Mathf.Clamp(value2 - 5f, 0f, 100f);
+                        if (eventRand == EventEnum.ResetHeat || eventRand == EventEnum.All)
+                        {
+                            levelHeatVal[item3] = 0f;
+                        }
                     }
                     break;
 
